@@ -29,7 +29,7 @@
         <?php
         $clientSoap = new SoapClient("http://localhost:18865/cotacao2017v2/Ws?wsdl");
         $parans = array('');
-
+        $client = new SoapClient("http://localhost:18865/fornecedor/Ws?WSDL");
         $return_fornecedores = $clientSoap->listarTodosFornecedores();
         $return_pedidos = $clientSoap->listarTodosPedidos();
         $return_produtos = $clientSoap->listarTodosProdutos();
@@ -199,10 +199,26 @@
                 </tbody>
             </table>
         </div>
-
-        <form class="confirmacao" method="post" action="index.php"> 
+        
+        <form class="confirmacao" method="post" action="cotacao.php">
+            <input class="oculto" name="operacao" value="confirmar">
             <button type="submit" class="btn btn-default campo">Cofirmar Cotacao</button>
+        </form>
+        
+        <form class="confirmacao" method="post" action="index.php">
             <button type="submit" class="btn btn-default campo">Cancelar Cotacao</button>
         </form>
+        <?php
+            $operacao = array_key_exists('operacao', $_POST) ? $_POST['operacao'] : '';
+            $codigoProdutos1 = array_key_exists('tipo1', $_POST) ? $_POST['tipo1'] : '';
+            if(strcmp($operacao, "operacao")){
+                foreach ($codigoProdutos1 as $codigoproduto){
+//                    $parans[] = array('codigo_produto' => "".$codigoproduto, 'data_pedido' => $dataPedido, 'cpf' => $cpf);
+//                    $client->salvarPedido($parans);
+                }
+            }
+                                
+                    
+        ?>
     </body>
 </html>

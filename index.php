@@ -13,7 +13,7 @@
         <link href="css/bootstrap-theme.css" rel="stylesheet">
         <link href="css/estilo.css" rel="stylesheet">
 
-        <title>Cadastro De Pedidos</title>
+        <title>Consulta De Produtos e Cadastro De Pedidos</title>
 
 
     </head>
@@ -28,7 +28,7 @@
 
         <div class="jumbotron">
             <h1>
-                Consulta De Produtos
+                Consulta De Produtos e Cadastro De Pedidos
             </h1>
         </div>
         <main class="imagem servicos container">

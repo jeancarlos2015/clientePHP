@@ -27,7 +27,7 @@
             </h1>
         </div>
 
-        <form method="post" action="Controlador">
+        <form method="post" action="CadastroProdutos.php">
             <span class="campo" id="basic-addon1" >Nome</span>
             <input id="codigo" type="text" class="campo" name="nome"  placeholder="Fulano" required="required" aria-describedby="basic-addon1" value="Feijao">
 
@@ -66,10 +66,29 @@
             </div>
             <button type="submit" class="btn btn-default campo" onclick="verifica()">Cadastrar</button>
 
-            <div class="alert">
-                <h3 class="mensagem">${mensagem}</h3>
-            </div>
         </form>
+        <?php
+            $nome = array_key_exists('nome', $_POST) ? $_POST['nome'] : '';
+            $descricao = array_key_exists('descricao', $_POST) ? $_POST['descricao'] : '';
+            $marca = array_key_exists('marca', $_POST) ? $_POST['marca'] : '';
+            $preco = array_key_exists('preco', $_POST) ? $_POST['preco'] : '';
+            $quantidade_unit = array_key_exists('quantidade_unitaria', $_POST) ? $_POST['quantidade_unitaria'] : '';
+            $quantidade_estoq = array_key_exists('quantidade_estoque', $_POST) ? $_POST['quantidade_estoque'] : '';
+            $cnpj = array_key_exists('opcao', $_POST) ? $_POST['opcao'] : '';
+            $tipoProduto = array_key_exists('optradio', $_POST) ? $_POST['optradio'] : '';
+            
+            $client = new SoapClient("http://localhost:18865/fornecedor/Ws?WSDL");
+            $parans = array('nome' => $nome, 'descricao' => $descricao, 'cnpj' => $cnpj, 'quantidade_unit' => $quantidade_unit,
+                            'quantidade_estoq' => $quantidade_estoq, 'marca' => $marca, 'preco' => floatval($preco), 'tipo' => $tipoProduto);
+            $result = (boolean)$client->salvarProduto($parans);
+            
+            if($result){
+                echo "<div class='alert'>";
+                echo "<h3 class='mensagem'>Produto Cadastrado Com Sucesso</h3>";
+                echo "</div>";
+            }
+            
+        ?>
         <br>
         <br>
     </body>

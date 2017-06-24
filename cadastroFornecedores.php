@@ -30,7 +30,7 @@
         </div>
         <br>
 
-        <form method="post" action="Controlador">
+        <form method="post" action="cadastroFornecedores.php">
             <span class="campo" id="basic-addon1" >CNPJ</span>
             <input type="text" class="campo" name="cnpj"  placeholder="XX.XXX.XXX/YYYY-ZZ" required="required" aria-describedby="basic-addon1">
 
@@ -52,10 +52,24 @@
 
             <button type="submit" class="btn btn-default campo">Cadastrar</button>            
 
-            <div class="alert">
-                <h3 class="mensagem">${mensagem}</h3>
-            </div>
+            
         </form>
+        <?php
+            $cnpj = array_key_exists('cpnj', $_POST) ? $_POST['cnpj'] : '';
+            $nome = array_key_exists('nome', $_POST) ? $_POST['nome'] : '';
+            $endereco = array_key_exists('endereco', $_POST) ? $_POST['endereco'] : '';
+            $email = array_key_exists('email', $_POST) ? $_POST['email'] : '';
+            $telefone = array_key_exists('telefone', $_POST) ? $_POST['telefone'] : '';
+            $client = new SoapClient("http://localhost:18865/fornecedor/Ws?WSDL");
+            $parans = array('cnpj' => $cnpj, 'nome' => $nome, 'endereco' => $endereco, 'email' => $email,'telefone' => $telefone);
+            $result = (boolean)$client->salvarFornecedor($parans);
+            if($result){
+                echo "<div class='alert'>";
+                echo "<h3 class='mensagem'>Fornecedor Cadastrado Com Sucesso</h3>";
+                echo "</div>";
+            }
+            
+        ?>
         <br>
         <br>
     </body>

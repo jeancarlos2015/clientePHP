@@ -33,8 +33,8 @@
         $return_fornecedores = $clientSoap->listarTodosFornecedores();
         $return_pedidos = $clientSoap->listarTodosPedidos();
         $return_produtos = $clientSoap->listarTodosProdutos();
-        
-        
+
+
         $fornecedores_result = $return_fornecedores->return;
         $pedidos_result = $return_pedidos->return;
         $produtos_result = $return_produtos->return;
@@ -42,43 +42,57 @@
         $jsonFornecedor = json_decode($fornecedores_result);
         $jsonPedido = json_decode($pedidos_result);
         $jsonProduto = json_decode($produtos_result);
-        
+
         $fornecedores = $jsonFornecedor->fornecedores;
         $produtos = $jsonProduto->produtos;
         $pedidos = $jsonPedido->pedidos;
         date_default_timezone_set('America/Sao_Paulo');
         $dataPedido = date('d-m-Y');
         $numeroCotacao = 0;
-        $numeroPedido="123123";
-        $telefone="0000-0000";
-        $vencimento=date('d-m-Y', strtotime("+4 days",strtotime($dataPedido)));
-        $fornecedor="fulano";
-        $email="teste@gmail.com";
-        $valorTotal=0;
+        $numeroPedido = "123123";
+        $telefone = "0000-0000";
+        $vencimento = date('d-m-Y', strtotime("+4 days", strtotime($dataPedido)));
+        $fornecedor = "fulano";
+        $email = "teste@gmail.com";
+        $valorTotal = 0;
         $codigoProdutos = array_key_exists('tipo1', $_POST) ? $_POST['tipo1'] : '';
         $formaPagamento1 = array_key_exists('formapagamento1', $_POST) ? $_POST['formapagamento1'] : '';
         $formaPagamento2 = array_key_exists('formapagamento2', $_POST) ? $_POST['formapagamento2'] : '';
         $cpf = array_key_exists('cpf', $_POST) ? $_POST['cpf'] : '';
-        $cnpj="";
-        foreach ($codigoProdutos as $codigo) {
-            foreach ($pedidos as $ped){
-                if(strcmp($codigo, $ped->codigo_produto)){
-                    $numeroCotacao+=$ped->codigo_pedido;
-                }
-            }
-            foreach ($produtos as $prod){
-                if(strcasecmp($codigo, $prod->codigo_produto)==0){
-                    $valorTotal= $valorTotal + floatval($prod->preco);
-                    $cnpj = $prod->cnpj;
-                }
-            }
-        }
+        $cnpj = "";
         
-        foreach ($fornecedores as $forn){
-            if(strcmp($cnpj, $forn->cnpj)){
-                $fornecedor = $forn->nome;
-                $telefone = $forn->telefone;
-                $email = $forn->email;
+
+//            if(strcmp($operacao, "operacao")){
+//                foreach ($codigoProdutos1 as $codigoproduto){
+//                    $parans[] = array('codigo_produto' => "".$codigoproduto, 'data_pedido' => $dataPedido, 'cpf' => $cpf);
+//                    $client->salvarPedido($parans);
+//                }
+//            }
+        if (is_array($codigoProdutos)) {
+            foreach ($codigoProdutos as $codigo) {
+                if (is_array($pedidos)) {
+                    foreach ($pedidos as $ped) {
+                        if (strcmp($codigo, $ped->codigo_produto)) {
+                            $numeroCotacao += $ped->codigo_pedido;
+                        }
+                    }
+                }
+                if (is_array($produtos)) {
+                    foreach ($produtos as $prod) {
+                        if (strcasecmp($codigo, $prod->codigo_produto) == 0) {
+                            $valorTotal = $valorTotal + floatval($prod->preco);
+                            $cnpj = $prod->cnpj;
+                        }
+                    }
+                }
+            }
+
+            foreach ($fornecedores as $forn) {
+                if (strcmp($cnpj, $forn->cnpj)) {
+                    $fornecedor = $forn->nome;
+                    $telefone = $forn->telefone;
+                    $email = $forn->email;
+                }
             }
         }
         ?>
@@ -199,26 +213,26 @@
                 </tbody>
             </table>
         </div>
-        
+
         <form class="confirmacao" method="post" action="cotacao.php">
             <input class="oculto" name="operacao" value="confirmar">
             <button type="submit" class="btn btn-default campo">Cofirmar Cotacao</button>
         </form>
-        
+
         <form class="confirmacao" method="post" action="index.php">
-            <button type="submit" class="btn btn-default campo">Cancelar Cotacao</button>
+            <button type="submit" class="btn btn-default campo">Volatar</button>
         </form>
         <?php
-            $operacao = array_key_exists('operacao', $_POST) ? $_POST['operacao'] : '';
-            $codigoProdutos1 = array_key_exists('tipo1', $_POST) ? $_POST['tipo1'] : '';
-            if(strcmp($operacao, "operacao")){
-                foreach ($codigoProdutos1 as $codigoproduto){
-//                    $parans[] = array('codigo_produto' => "".$codigoproduto, 'data_pedido' => $dataPedido, 'cpf' => $cpf);
-//                    $client->salvarPedido($parans);
+        $codigoProdutos1 = array_key_exists('tipo1', $_POST) ? $_POST['tipo1'] : '';
+        $operacao = array_key_exists('operacao', $_POST) ? $_POST['operacao'] : '';
+        if (strcmp($operacao, "operacao")) {
+            if (is_array($codigoProdutos1)) {
+                foreach ($codigoProdutos1 as $codigoproduto) {
+                    $parans = array('codigo_produto' => "" . $codigoproduto, 'data_pedido' => $dataPedido, 'cpf' => $cpf);
+                    $client->salvarPedido($parans);
                 }
             }
-                                
-                    
+        }
         ?>
     </body>
 </html>
